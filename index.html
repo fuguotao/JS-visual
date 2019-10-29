@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <script src="blockly_compressed.js"></script>
+    <script src="blocks_compressed.js"></script>
+    <script src="msg/js/en.js"></script><!-- INCLUDE LANGUAGE (ENGLISH)-->
+    <script src="msg/messages.js"></script><!-- -->
+    <script src="javascript_compressed.js"></script>
+    <style media="screen">
+      #blocklyDiv {
+        height: 100vh;
+        width: 50%;
+        float: left;
+      }
+
+      #Commands {
+        height: 10vh;
+        width: 50%;
+        float: right;
+      }
+
+      button {
+        height: 10vh;
+        padding: 10px;
+        background-color: #805055;
+        border: none;
+        width: 100%;
+        transition: 0.4s;
+      }
+
+      button:hover {
+        background-color: grey;
+      }
+
+      body {
+        margin: 0;
+        max-height: 100vh;
+      }
+
+      pre {
+        resize: none;
+        height: 90vh;
+        width: 50%;
+        float: right;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="blocklyDiv"></div>
+    <xml id="toolbox" style="display: none">
+      <category name="Logic" colour="210">
+        <block type="logic_compare"></block>
+        <block type="logic_operation"></block>
+        <block type="logic_boolean"></block>
+        <block type="controls_if"></block>
+        <block type="controls_ifelse"></block>
+      </category>
+      <category name="text" colour="160">
+        <block type="text"></block>
+        <block type="text_print"></block>
+        <block type="text_join"></block>
+        <block type="text_append"></block>
+        <block type="text_length"></block>
+        <block type="text_isEmpty"></block>
+      </category>
+      <category name="colours" colour="70">
+        <block type="colour_picker"></block>
+        <block type="colour_random"></block>
+        <block type="colour_rgb"></block>
+        <block type="colour_blend"></block>
+      </category>
+      <category name="Lists" colour="10">
+        <block type="lists_create_empty"></block>
+        <block type="lists_repeat"></block>
+        <block type="lists_isEmpty"></block>
+        <block type="lists_length"></block>
+      </category>
+      <category name="Loops" colour="120">
+        <block type="controls_repeat_ext"></block>
+        <block type="controls_for"></block>
+        <block type="controls_forEach"></block>
+        <block type="controls_whileUntil"></block>
+      </category>
+      <category name="Math" colour="230">
+        <block type="math_number"></block>
+        <block type="math_arithmetic"></block>
+        <block type="math_constant"></block>
+      </category>
+      <category name="Variables" colour="330" custom="VARIABLE"></category>
+      <category name="Functions" colour="290" custom="PROCEDURE"></category>
+    </xml>
+    <div id="Commands">
+      <button onclick="runCode()"><h2>Run</h2></button>
+    </div>
+    <pre><code id="code"></code></pre>
+    <script>
+      //Add blockly into div
+      var workspace = Blockly.inject('blocklyDiv',
+          {toolbox: document.getElementById('toolbox')});
+
+      //Show code in textarea
+      function myUpdateFunction(event) {
+        var code = Blockly.JavaScript.workspaceToCode(workspace);
+        document.getElementById('code').innerHTML = code;
+      }
+      workspace.addChangeListener(myUpdateFunction);
+
+      //Aja JavaScript
+      function runCode() {
+        // Generate JavaScript code and run it.
+        window.LoopTrap = 1000;
+        Blockly.JavaScript.INFINITE_LOOP_TRAP =
+            'if (--window.LoopTrap == 0) throw "Infinite loop.";\n';
+        var code = Blockly.JavaScript.workspaceToCode(workspace);
+        Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
+        try {
+          eval(code);
+        } catch (e) {
+          alert(e);
+        }
+      }
+    </script>
+  </body>
+</html>
